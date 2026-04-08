@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시글 상세</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container">
+        <h1 class="logo">Board Study</h1>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="post-box">
+        <div class="category">공지</div>
+        <h2 class="post-title">프론트엔드 스터디 1주차 안내</h2>
+
+        <div class="post-info">
+          <span>작성자: 관리자</span>
+          <span>작성일: 2026.03.16</span>
+          <span>조회수: 128</span>
+        </div>
+
+        <div class="post-content">
+          <p>안녕하세요. 프론트엔드 스터디 1주차 안내입니다.</p>
+          <p>시맨틱 태그를 사용해 문서 구조를 나누고, CSS로 스타일을 적용해보는 것이 핵심입니다.</p>
+        </div>
+
+        <a href="posts.html" class="btn">목록으로</a>
+      </section>
+
+      <section class="comment-box">
+        <h2 class="comment-title">댓글 작성</h2>
+        <div class="comment-write">
+          <textarea id="comment-input" placeholder="댓글을 입력하세요..."></textarea>
+          <button id="comment-submit" class="btn-submit">등록</button>
+        </div>
+
+        <h2 class="comment-title">댓글 목록</h2>
+        <div id="comment-list">
+          </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>© 2026 Board Study</p>
+      </div>
+    </footer>
+
+    <script>
+      const submitBtn = document.getElementById('comment-submit');
+      const commentInput = document.getElementById('comment-input');
+      const commentList = document.getElementById('comment-list');
+
+      submitBtn.addEventListener('click', function() {
+        const content = commentInput.value;
+
+        if (content.trim() === "") {
+          alert("내용을 입력해주세요!");
+          return;
+        }
+
+        // 1. 새로운 댓글 요소 생성
+        const newComment = document.createElement('div');
+        newComment.className = 'comment-item';
+
+        // 2. 댓글 내부 구조 설정 (삭제 버튼, 좋아요 버튼 포함)
+        newComment.innerHTML = `
+          <div class="comment-info">
+            <strong>나(사용자)</strong>
+            <span>방금 전</span>
+          </div>
+          <p>${content}</p>
+          <div class="comment-actions">
+            <button class="like-btn">❤️ <span class="like-count">0</span></button>
+            <button class="delete-btn">삭제</button>
+          </div>
+        `;
+
+        // 3. 좋아요 기능 연결
+        const likeBtn = newComment.querySelector('.like-btn');
+        const likeCountSpan = newComment.querySelector('.like-count');
+        let isLiked = false;
+
+        likeBtn.addEventListener('click', function() {
+          let count = parseInt(likeCountSpan.innerText);
+          if (!isLiked) {
+            likeCountSpan.innerText = count + 1;
+            likeBtn.classList.add('active');
+            isLiked = true;
+          } else {
+            likeCountSpan.innerText = count - 1;
+            likeBtn.classList.remove('active');
+            isLiked = false;
+          }
+        });
+
+        // 4. 삭제 기능 연결
+        const deleteBtn = newComment.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', function() {
+          if(confirm("정말 삭제하시겠습니까?")) {
+            newComment.remove();
+          }
+        });
+
+        // 5. 화면에 추가 및 입력창 비우기
+        commentList.prepend(newComment);
+        commentInput.value = "";
+      });
+    </script>
+  </body>
+</html>
